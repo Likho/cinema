@@ -1,20 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MoviesController!{% endblock %}
+{% block title %}{{ pageTitle }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/likhojiba/dev/symfony/cinema/src/Controller/MoviesController.php'|file_link(0) }}">src/Controller/MoviesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/likhojiba/dev/symfony/cinema/templates/movies/index.html.twig'|file_link(0) }}">templates/movies/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <main>
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Book a Movie</h1>
+                    <p class="lead text-muted">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                        eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% for movie in movies %}
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <img src="{{ movie.image }}" class="card-img-top" alt="..." />
+                                <div class="card-body">
+                                    <p class="card-text">{{ movie.title }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="/movie/{{ movie.id }}" type="button" class="btn btn-sm btn-outline-secondary">Make booking</a>
+                                        </div>
+                                        <small class="text-muted">{{ movie.duration }} mins</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}
