@@ -1,0 +1,32 @@
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    {% for date in movie.getMovieDates() %}
+        <li class="nav-item" role="presentation">
+            {% set test = date.getId() %}
+            <button v-if="seen == {{ test }}" class="nav-link active btn-primary" id="pills-{{ date.getId() }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ date.getId() }}" type="button" role="tab" aria-controls="pills-{{ date.getId() }}" aria-selected="true">
+                {{ date.getDate()|date("Y-m-d") }}
+            </button>
+            <button v-else class="nav-link btn-primary" id="pills-{{ date.getId() }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ date.getId() }}" type="button" role="tab" aria-controls="pills-{{ date.getId() }}" aria-selected="true">
+                {{ date.getDate()|date("Y-m-d") }}
+            </button>
+        </li>
+    {% endfor %}
+</ul>
+<div class="tab-content" id="pills-tabContent">
+    {% for date in movie.getMovieDates() %}
+        {% set test = date.getId() %}
+        <div v-if="seen == {{ test }}" class="tab-pane fade show active" id="pills-{{ date.getId() }}" role="tabpanel" aria-labelledby="pills-{{ date.getId() }}-tab">
+            {% for time in date.getMovieTimes() %}
+                {{ time.getTime()|date("H:i")  }}
+            {% endfor %}
+        </div>
+        <div v-else class="tab-pane fade show" id="pills-{{ date.getId() }}" role="tabpanel" aria-labelledby="pills-{{ date.getId() }}-tab">
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                {% for time in date.getMovieTimes() %}
+                    <a href="/bookings/create/{{ time.getId() }}" type="button" class="btn btn-outline-primary">
+                        {{ time.getTime()|date("H:i")  }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

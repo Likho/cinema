@@ -1,3 +1,6 @@
 index:
     path: /
     controller: App\Controller\MoviesController::index
+view:
+    path: movie/{movie}
+    controller: App\Controller\MoviesController::view
