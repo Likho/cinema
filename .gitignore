@@ -8,6 +8,8 @@
 /var/
 /vendor/
 /.idea/
+/docker/logs/
+/docker/mysql/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
