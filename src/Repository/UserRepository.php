@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -41,9 +42,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function save($user)
     {
-        $user->setPassword($this->passwordEncoder->hashPassword($user, $user->getPassword()));
-        // Save
-        $this->_em->persist($user);
-        $this->_em->flush();
+        try {
+            $user->setPassword($this->passwordEncoder->hashPassword($user, $user->getPassword()));
+            $this->_em->persist($user);
+            $this->_em->flush();
+        } catch (Exception $exception) {
+            if ($exception instanceof Exception\UniqueConstraintViolationException) {
+                throw new \Exception('The provided email is already taken');
+            }
+            throw new \Exception('There was an error saving user ');
+        }
     }
 }

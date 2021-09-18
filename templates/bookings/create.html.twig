@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Make a booking!{% endblock %}
+
+{% block body %}
+    <main>
+        <section class="py-5 container" id="app">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Book {{ movieTime.getMovieDate().getMovie().getTitle() }}</h1>
+                    <small class="text-muted">
+                        <strong>Date : </strong> {{ movieTime.getMovieDate().getDate()|date("Y-m-d") }}
+                        <strong>Time : </strong> {{ movieTime.getTime()|date("H:i") }}
+                    </small>
+                </div>
+            </div>
+            <div class="row align-items-md-stretch">
+                <div class="col shadow  bg-light rounded">
+                    <div class="row pt-4 px-2">
+                        {% if error != "" %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <form class="py-5" action="/bookings/post-booking" method="POST">
+                        <input type="hidden" name="time_id" value="{{ movieTime.getId() }}">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" id="first_name" placeholder="First name">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="text" name="email" class="form-control" id="email" placeholder="Email">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="py-2">
+                                <select class="form-select" name="number_of_tickets" aria-label="Default select example">
+                                    <option value="0">Select number of tickets</option>
+                                    {% for i in range(1,5) %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row px-2">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Make Booking</button>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col">
+                    <img src="{{ movieTime.getMovieDate().getMovie().getImage() }}" class="card-img-top" alt="..." />
+                </div>
+            </div>
+        </section>
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
