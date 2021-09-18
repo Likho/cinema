@@ -23,10 +23,17 @@
                             <div class="card shadow-sm">
                                 <img src="{{ movie.image }}" class="card-img-top" alt="..." />
                                 <div class="card-body">
-                                    <strong class="card-text text-muted">{{ movie.title }}</strong>
+                                    <div class="row">
+                                        <strong class="card-text text-muted">{{ movie.title }}</strong>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <p class="text-muted">Showing at <strong>{{ movie.getCinema().getName() }}</strong></p>
+                                    </div>
+
                                     <div class="d-flex justify-content-between align-items-center py-3">
                                         <div class="btn-group">
-                                            <a href="/movie/{{ movie.id }}" type="button" class="btn btn-sm btn-outline-secondary">Make booking</a>
+                                            <a href="/movie/{{ movie.id }}" type="button" class="btn btn-sm btn-primary">Make booking</a>
                                         </div>
                                         <small class="text-muted">{{ movie.duration }} mins</small>
                                     </div>

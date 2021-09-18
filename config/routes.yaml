@@ -2,5 +2,11 @@ index:
     path: /
     controller: App\Controller\MoviesController::index
 view:
-    path: movie/{movie}
+    path: /movie/{movie}
     controller: App\Controller\MoviesController::view
+make-booking:
+    path: /bookings/create/{movieTime}
+    controller: App\Controller\BookingsController::create
+bookings:
+    path: /bookings
+    controller: App\Controller\BookingsController::index

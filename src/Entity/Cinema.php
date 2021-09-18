@@ -40,9 +40,15 @@ class Cinema
      */
     private $movies;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Theatre::class, mappedBy="cinema", orphanRemoval=true)
+     */
+    private $theatres;
+
     public function __construct()
     {
         $this->movies = new ArrayCollection();
+        $this->theatres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +116,36 @@ class Cinema
             // set the owning side to null (unless already changed)
             if ($movie->getCinema() === $this) {
                 $movie->setCinema(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Theatre[]
+     */
+    public function getTheatres(): Collection
+    {
+        return $this->theatres;
+    }
+
+    public function addTheatre(Theatre $theatre): self
+    {
+        if (!$this->theatres->contains($theatre)) {
+            $this->theatres[] = $theatre;
+            $theatre->setCinema($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTheatre(Theatre $theatre): self
+    {
+        if ($this->theatres->removeElement($theatre)) {
+            // set the owning side to null (unless already changed)
+            if ($theatre->getCinema() === $this) {
+                $theatre->setCinema(null);
             }
         }
 
