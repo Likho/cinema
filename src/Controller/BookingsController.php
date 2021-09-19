@@ -76,7 +76,7 @@ class BookingsController extends BaseController
             $booking = $this->bookingRepository->save($request, $movieTime);
 
             //Update theater available tickets
-            $this->movieTimeRepository->updateNumberOfBookedTickets($booking);
+            $this->movieTimeRepository->addToBookedTickets($booking);
             //Redirect to bookings page
             return $this->redirectToRoute('bookings');
         } catch (\Exception $exception) {
@@ -94,9 +94,10 @@ class BookingsController extends BaseController
         $movieDate = Carbon::createFromFormat('Y-m-d H:i',  "{$date} {$time}");
 
         if ($now->diffInHours($movieDate) > 1) {
-            //Cancel
             try {
-                $this->bookingRepository->delete($booking);
+                //Reinstate tickets
+                $this->bookingRepository->cancel($booking);
+                $this->movieTimeRepository->replaceMovieTickets($booking);
                 return JsonResponse::fromJsonString('{ "response": success }');
             } catch (\Exception $exception) {
                 return JsonResponse::fromJsonString(json_encode(['response' => $exception->getMessage()]));

@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Movie;
+use App\Entity\MovieDate;
+use App\Entity\MovieTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +22,23 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
-    // /**
-    //  * @return Movie[] Returns an array of Movie objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findUpcoming()
     {
         return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin(
+                MovieDate::class,
+                'd',
+                Join::WITH,
+                'd.movie_id = m.id'
+            )->innerJoin(
+                MovieTime::class,
+                't',
+                Join::WITH,
+                't.movie_date_id = d.id'
+            )->where(
+                'CONCAT(d.date, \' \',t.time) > CURRENT_TIMESTAMP()'
+            )->groupBy('m.id')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Movie
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

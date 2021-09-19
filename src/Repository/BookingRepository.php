@@ -31,6 +31,7 @@ class BookingRepository extends ServiceEntityRepository
             $booking->setMovieTime($movieTime);
             $booking->setNumberOfTickets($request->request->get('tickets'));
             $booking->setReferenceNumber(bin2hex(random_bytes(4)));
+            $booking->setActive(true);
             $this->_em->persist($booking);
             $this->_em->flush();
 
@@ -40,43 +41,15 @@ class BookingRepository extends ServiceEntityRepository
         }
     }
 
-     /**
-      * Get By user_id
-      * @return Booking[] Returns an array of Booking objects
-      */
-    public function findUserId($value): array
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function delete(Booking $booking)
+    public function cancel(Booking $booking)
     {
         try {
-            $this->_em->remove($booking);
+            $booking->setActive(false);
+            $this->_em->persist($booking);
             $this->_em->flush();
         } catch (Exception $exception) {
-            throw new \Exception("Unable to delete booking");
+            throw new \Exception("Unable to cancel booking");
         }
 
     }
-
-
-    /*
-    public function findOneBySomeField($value): ?Booking
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

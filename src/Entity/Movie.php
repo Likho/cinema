@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -188,7 +189,10 @@ class Movie
      */
     public function getMovieDates(): Collection
     {
-        return $this->movieDates;
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->gt('date', new \DateTime('now')));
+
+        return $this->movieDates->matching($criteria);
     }
 
     public function addMovieDate(MovieDate $movieDate): self

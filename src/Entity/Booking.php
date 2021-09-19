@@ -47,6 +47,11 @@ class Booking
      */
     private $reference_number;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,6 +113,18 @@ class Booking
     public function setReferenceNumber(string $reference_number): self
     {
         $this->reference_number = $reference_number;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

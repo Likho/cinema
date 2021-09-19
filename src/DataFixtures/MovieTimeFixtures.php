@@ -37,6 +37,7 @@ class MovieTimeFixtures extends Fixture implements DependentFixtureInterface
                 $date = Carbon::createFromTime(10);
                 $movieTime = new MovieTime();
                 $movieTime->setMovieDate($movieDate);
+                $movieTime->setMovieDateId($movieDate->getId());
                 $movieTime->setTime($date->addHours($i));
                 $movieTime->setTicketsBooked(0);
                 $movieTime->setTheater($movieDate->getMovie()->getTheater());

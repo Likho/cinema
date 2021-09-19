@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -151,7 +152,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getBookings(): Collection
     {
-        return $this->bookings;
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('active', 1));
+
+        return $this->bookings->matching($criteria);
     }
 
     public function addBooking(Booking $booking): self

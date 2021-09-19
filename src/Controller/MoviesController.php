@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\MovieDate;
 use App\Repository\MovieRepository;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,13 +27,14 @@ class MoviesController extends BaseController
     {
         return $this->render('movies/index.html.twig', [
             'pageTitle' => 'Book a movie!',
-            'movies' => $this->movieRepository->findAll(),
+            'movies' => $this->movieRepository->findUpcoming(),
             'user' => $this->user,
         ]);
     }
 
     public function view(Movie $movie): Response
     {
+//        $movie = $this->movieRepository->findById($movie->getId());
         return $this->render('movies/view.html.twig', [
             'pageTitle' => $movie->getTitle(),
             'movie' => $movie,

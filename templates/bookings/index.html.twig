@@ -7,10 +7,15 @@
     <section class="py-5 container" id="app">
         <br />
         <div class="pt-lg-5">
+            <div v-if="cancelSuccess" class="alert text-center alert-success" v-bind:class="{'alert-danger': cancelError }" >
+                Successfully cancelled booking!!
+            </div>
             <table class="table">
                 <thead class="table-light">
                     <th>id</th>
                     <th>Movie</th>
+                    <th>Cinema</th>
+                    <th>Theater</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Reference number</th>
@@ -22,12 +27,14 @@
                         <tr>
                             <td>{{ booking.getId() }}</td>
                             <td>{{ booking.getMovieTime().getMovieDate().getMovie().getTitle() }}</td>
+                            <td>{{ booking.getMovieTime().getMovieDate().getMovie().getCinema().getName() }}</td>
+                            <td>{{ booking.getMovieTime().getMovieDate().getMovie().getTheater().getName() }}</td>
                             <td>{{ booking.getMovieTime().getMovieDate().getDate() |date("Y-m-d") }}</td>
                             <td>{{ booking.getMovieTime().getTime() |date("H:i") }}</td>
                             <td>{{ booking.getReferenceNumber() }}</td>
                             <td>
                                 {% set bookingId = booking.getId() %}
-                                <a href="#" type="button" v-on:click="cancelBooking({{ bookingId }})" class="btn btn-danger">Cancel</a>
+                                <a href="javascript:;" type="button" v-on:click="cancelBooking({{ bookingId }})" class="btn btn-danger">Cancel</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -49,17 +56,20 @@
             delimiters: ['${', '}'],
             data() {
                 return {
-
+                    cancelSuccess: false,
+                    cancelError: false
                 };
             },
             methods: {
                 cancelBooking(bookingId) {
                     if (confirm("Cancel booking?")) {
-                        console.log(bookingId)
-                        axios.delete(`/bookings/cancel/${bookingId}`).then(resp => {
-                            location.reload();
+                        axios.put(`/bookings/cancel/${bookingId}`).then(resp => {
+                            this.cancelSuccess = true
+                            setInterval(function(){
+                                location.reload();
+                                }, 5000);
                         }).catch(error => {
-                            console.log(error);
+                            this.cancelError =  true
                         })
                     }
                 }

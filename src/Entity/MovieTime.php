@@ -62,6 +62,11 @@ class MovieTime
      */
     private $bookings;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $movie_date_id;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -182,6 +187,18 @@ class MovieTime
                 $booking->setMovieTime(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMovieDateId(): ?int
+    {
+        return $this->movie_date_id;
+    }
+
+    public function setMovieDateId(int $movie_date_id): self
+    {
+        $this->movie_date_id = $movie_date_id;
 
         return $this;
     }

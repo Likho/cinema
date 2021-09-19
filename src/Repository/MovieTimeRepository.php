@@ -20,40 +20,19 @@ class MovieTimeRepository extends ServiceEntityRepository
         parent::__construct($registry, MovieTime::class);
     }
 
-    public function updateNumberOfBookedTickets(Booking $booking): void
+    public function addToBookedTickets(Booking $booking): void
     {
         $currentlyBooked = $booking->getMovieTime()->getTicketsBooked();
-        $booking->getMovieTime()->setTicketsBooked($currentlyBooked+$booking->getNumberOfTickets());
+        $booking->getMovieTime()->setTicketsBooked($currentlyBooked + $booking->getNumberOfTickets());
         $this->_em->persist($booking->getMovieTime());
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return MovieTime[] Returns an array of MovieTime objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function replaceMovieTickets(Booking $booking): void
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $currentlyBooked = $booking->getMovieTime()->getTicketsBooked();
+        $booking->getMovieTime()->setTicketsBooked($currentlyBooked - $booking->getNumberOfTickets());
+        $this->_em->persist($booking->getMovieTime());
+        $this->_em->flush();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?MovieTime
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
