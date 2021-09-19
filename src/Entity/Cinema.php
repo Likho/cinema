@@ -41,14 +41,14 @@ class Cinema
     private $movies;
 
     /**
-     * @ORM\OneToMany(targetEntity=Theatre::class, mappedBy="cinema", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Theater::class, mappedBy="cinema", orphanRemoval=true)
      */
-    private $theatres;
+    private $theaters;
 
     public function __construct()
     {
         $this->movies = new ArrayCollection();
-        $this->theatres = new ArrayCollection();
+        $this->theaters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,29 +123,29 @@ class Cinema
     }
 
     /**
-     * @return Collection|Theatre[]
+     * @return Collection|Theater[]
      */
-    public function getTheatres(): Collection
+    public function getTheaters(): Collection
     {
-        return $this->theatres;
+        return $this->theaters;
     }
 
-    public function addTheatre(Theatre $theatre): self
+    public function addTheater(Theater $theater): self
     {
-        if (!$this->theatres->contains($theatre)) {
-            $this->theatres[] = $theatre;
-            $theatre->setCinema($this);
+        if (!$this->theaters->contains($theater)) {
+            $this->theaters[] = $theater;
+            $theater->setCinema($this);
         }
 
         return $this;
     }
 
-    public function removeTheatre(Theatre $theatre): self
+    public function removeTheater(Theater $theater): self
     {
-        if ($this->theatres->removeElement($theatre)) {
+        if ($this->theaters->removeElement($theater)) {
             // set the owning side to null (unless already changed)
-            if ($theatre->getCinema() === $this) {
-                $theatre->setCinema(null);
+            if ($theater->getCinema() === $this) {
+                $theater->setCinema(null);
             }
         }
 

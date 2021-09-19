@@ -4,57 +4,48 @@
 
 {% block body %}
     <main>
-        <section class="py-5 container" id="app">
+        <section class="py-5 container" id="app" data-seats="{{ availableSeats }}">
             <div class="row py-lg-5">
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <h1 class="fw-light">Book {{ movieTime.getMovieDate().getMovie().getTitle() }}</h1>
-                    <small class="text-muted">
-                        <strong>Date : </strong> {{ movieTime.getMovieDate().getDate()|date("Y-m-d") }}
-                        <strong>Time : </strong> {{ movieTime.getTime()|date("H:i") }}
-                    </small>
                 </div>
             </div>
             <div class="row align-items-md-stretch">
                 <div class="col shadow  bg-light rounded">
-                    <div class="row pt-4 px-2">
+                    <div class="row pt-5 px-2 text-muted">
+                        <p>
+                            <strong>Showing at : </strong> {{ movieTime.getMovieDate().getMovie().getCinema().getName() }}
+                        </p>
+                        <p>
+                            <strong>Date : </strong> {{ movieTime.getMovieDate().getDate()|date("Y-m-d") }} {{ movieTime.getTime()|date("H:i") }}
+                        </p>
+                        <p>
+                            <strong>Available seats : </strong> {{ availableSeats }}
+                        </p>
+                    </div>
+                    <div class="row px-2">
                         {% if error != "" %}
                             <div class="alert alert-danger">
                                 {{ error }}
                             </div>
                         {% endif %}
                     </div>
+                    <div class="row px-2" v-if="tooManyTicketsSelected">
+                        <div class="alert alert-danger">
+                            Please select {{ availableSeats }} or less
+                        </div>
+                    </div>
 
-                    <form class="py-5" action="/bookings/post-booking" method="POST">
-                        <input type="hidden" name="time_id" value="{{ movieTime.getId() }}">
-                        <div class="row">
+                    <form class="py-4" action="/bookings/add/{{ movieTime.getId() }}" method="POST">
+                        <div class="row mb-4">
                             <div class="col">
-                                <div class="mb-3">
-                                    <label for="first_name" class="form-label">First Name</label>
-                                    <input type="text" name="first_name" class="form-control" id="first_name" placeholder="First name">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="text" name="email" class="form-control" id="email" placeholder="Email">
-                                </div>
-
+                                <label for="tickets" class="form-label">How many tickets would you like??</label>
+                                <input type="number" v-model="userTickets" v-on:input="compareTickets()" name="tickets" class="form-control" id="tickets" placeholder="Tickets" required />
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="py-2">
-                                <select class="form-select" name="number_of_tickets" aria-label="Default select example">
-                                    <option value="0">Select number of tickets</option>
-                                    {% for i in range(1,5) %}
-                                        <option value="{{ i }}">{{ i }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                        <div class="row px-2" >
+                            <button type="submit" :disabled="tooManyTicketsSelected==true || userTickets == 0" class="btn btn-primary btn-lg btn-block">Make Booking</button>
                         </div>
-                        <div class="row px-2">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Make Booking</button>
-                        </div>
-
                     </form>
                 </div>
                 <div class="col">
@@ -62,13 +53,34 @@
                 </div>
             </div>
         </section>
-        <div class="album py-5 bg-light">
-            <div class="container">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-                </div>
-            </div>
-        </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        new Vue ({
+            el: '#app',
+            delimiters: ['${', '}'],
+            data() {
+                return {
+                    showSubmit: false,
+                    tooManyTicketsSelected: false,
+                    userTickets: '',
+                    availableSeats: 0,
+                };
+            },
+            beforeMount: function() {
+                this.availableSeats = this.$el.attributes['data-seats'].value
+            },
+            methods: {
+                compareTickets() {
+                    if (parseInt(this.userTickets) > parseInt(this.availableSeats)) {
+                        this.tooManyTicketsSelected = true
+                    } else {
+                        this.tooManyTicketsSelected = false
+                    }
+                }
+            }
+        });
+    </script>
 {% endblock %}
 

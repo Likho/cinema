@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Make a booking!{% endblock %}
+
+{% block body %}
+<main>
+    <section class="py-5 container" id="app">
+        <br />
+        <div class="pt-lg-5">
+            <table class="table">
+                <thead class="table-light">
+                    <th>id</th>
+                    <th>Movie</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reference number</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody>
+                {% if bookings|length > 0 %}
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.getId() }}</td>
+                            <td>{{ booking.getMovieTime().getMovieDate().getMovie().getTitle() }}</td>
+                            <td>{{ booking.getMovieTime().getMovieDate().getDate() |date("Y-m-d") }}</td>
+                            <td>{{ booking.getMovieTime().getTime() |date("H:i") }}</td>
+                            <td>{{ booking.getReferenceNumber() }}</td>
+                            <td>
+                                {% set bookingId = booking.getId() %}
+                                <a href="#" type="button" v-on:click="cancelBooking({{ bookingId }})" class="btn btn-danger">Cancel</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No bookings yet </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue ({
+            el: '#app',
+            delimiters: ['${', '}'],
+            data() {
+                return {
+
+                };
+            },
+            methods: {
+                cancelBooking(bookingId) {
+                    if (confirm("Cancel booking?")) {
+                        console.log(bookingId)
+                        axios.delete(`/bookings/cancel/${bookingId}`).then(resp => {
+                            location.reload();
+                        }).catch(error => {
+                            console.log(error);
+                        })
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

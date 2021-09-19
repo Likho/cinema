@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MovieTimeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,9 +41,30 @@ class MovieTime
      */
     private $updated_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Theater::class, inversedBy="movieTimes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $theater;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $tickets_booked;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $theater_id;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="movieTime", orphanRemoval=true)
+     */
+    private $bookings;
+
     public function __construct()
     {
-
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +116,72 @@ class MovieTime
     public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getTheater(): ?Theater
+    {
+        return $this->theater;
+    }
+
+    public function setTheater(?Theater $theater): self
+    {
+        $this->theater = $theater;
+
+        return $this;
+    }
+
+    public function getTicketsBooked(): ?int
+    {
+        return $this->tickets_booked;
+    }
+
+    public function setTicketsBooked(int $tickets_booked): self
+    {
+        $this->tickets_booked = $tickets_booked;
+
+        return $this;
+    }
+
+    public function getTheaterId(): ?int
+    {
+        return $this->theater_id;
+    }
+
+    public function setTheaterId(int $theater_id): self
+    {
+        $this->theater_id = $theater_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setMovieTime($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getMovieTime() === $this) {
+                $booking->setMovieTime(null);
+            }
+        }
 
         return $this;
     }

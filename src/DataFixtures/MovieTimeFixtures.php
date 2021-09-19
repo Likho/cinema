@@ -22,8 +22,10 @@ class MovieTimeFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             CinemaFixtures::class,
+            TheaterFixtures::class,
             MovieFixtures::class,
             MovieDateFixtures::class,
+            TheaterFixtures::class,
         ];
     }
 
@@ -36,10 +38,12 @@ class MovieTimeFixtures extends Fixture implements DependentFixtureInterface
                 $movieTime = new MovieTime();
                 $movieTime->setMovieDate($movieDate);
                 $movieTime->setTime($date->addHours($i));
+                $movieTime->setTicketsBooked(0);
+                $movieTime->setTheater($movieDate->getMovie()->getTheater());
+                $movieTime->setTheaterId($movieDate->getMovie()->getTheater()->getId());
                 $movieTime->setCreatedAt(new \DateTimeImmutable('now'));
                 $movieTime->setUpdatedAt(new \DateTimeImmutable('now'));
                 $manager->persist($movieTime);
-
             }
         }
         $manager->flush();

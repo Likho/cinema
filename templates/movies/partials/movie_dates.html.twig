@@ -1,8 +1,8 @@
 <ul class="nav nav-pills mb-3 px-2" id="pills-tab" role="tablist">
     {% for date in movie.getMovieDates() %}
         <li class="nav-item" role="presentation">
-            {% set test = date.getId() %}
-            <button v-if="seen == {{ test }}" class="nav-link active btn-primary" id="pills-{{ date.getId() }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ date.getId() }}" type="button" role="tab" aria-controls="pills-{{ date.getId() }}" aria-selected="true">
+            {% set dateId = date.getId() %}
+            <button v-if="seen == {{ dateId }}" class="nav-link active btn-primary" id="pills-{{ date.getId() }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ date.getId() }}" type="button" role="tab" aria-controls="pills-{{ date.getId() }}" aria-selected="true">
                 {{ date.getDate()|date("Y-m-d") }}
             </button>
             <button v-else class="nav-link btn-primary" id="pills-{{ date.getId() }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ date.getId() }}" type="button" role="tab" aria-controls="pills-{{ date.getId() }}" aria-selected="true">
@@ -13,8 +13,8 @@
 </ul>
 <div class="tab-content" id="pills-tabContent">
     {% for date in movie.getMovieDates() %}
-        {% set test = date.getId() %}
-        <div v-if="seen == {{ test }}" class="tab-pane fade show active" id="pills-{{ date.getId() }}" role="tabpanel" aria-labelledby="pills-{{ date.getId() }}-tab">
+        {% set dateId = date.getId() %}
+        <div v-if="seen == {{ dateId }}" class="tab-pane fade show active" id="pills-{{ date.getId() }}" role="tabpanel" aria-labelledby="pills-{{ date.getId() }}-tab">
             {% for time in date.getMovieTimes() %}
                 {{ time.getTime()|date("H:i")  }}
             {% endfor %}

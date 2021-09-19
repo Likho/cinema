@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Booking;
 use App\Entity\MovieTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,6 +18,14 @@ class MovieTimeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MovieTime::class);
+    }
+
+    public function updateNumberOfBookedTickets(Booking $booking): void
+    {
+        $currentlyBooked = $booking->getMovieTime()->getTicketsBooked();
+        $booking->getMovieTime()->setTicketsBooked($currentlyBooked+$booking->getNumberOfTickets());
+        $this->_em->persist($booking->getMovieTime());
+        $this->_em->flush();
     }
 
     // /**

@@ -10,3 +10,9 @@ make-booking:
 bookings:
     path: /bookings
     controller: App\Controller\BookingsController::index
+create-booking:
+    path: /bookings/add/{movieTime}
+    controller: App\Controller\BookingsController::add
+cancel-booking:
+    path: /bookings/cancel/{booking}
+    controller: App\Controller\BookingsController::cancel
