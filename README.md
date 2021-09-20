@@ -17,11 +17,11 @@ After cloning the repo, open the project folder on the terminal and run the foll
 ```
 cd docker
 docker-compose build
-docker-compose up
+docker-compose up -d
+docker-compose run php composer install
 ```
 
-After `docker-compose up` has completed open another terminal window and navigate to the docker directory (`cinema/docker`) of the repo.
-You will now migrate the db and populate test data.
+After `composer install` has completed you will now migrate the db and populate test data.
 
 Run the instructions below.
 
