@@ -1,30 +1,33 @@
-# cinema
-A symfony movie booking application. I have used the framework Symfony 5 and mariaDb.
-My reasons for using symfony are 
-- it supports the repository pattern by default and creates repositories with basic methods 
-for each entity. 
+# Cinema
+A Symfony movie booking application. I have used the framework Symfony 5 and mariaDb.
+My reasons for using Symfony are
+- It supports the repository pattern by default and creates repositories with basic methods
+  for each entity.
 - It has easy to implement security which manages user authentication and authorization out of the box.
 
-<h4>Requirements</h4>
-I used php7.3 . If you are using an earlier version please download <strong>Docker</strong> in order to run this application
+### Requirements
+I used PHP 7.3. If you are using an earlier version please download **Docker** in order to run this application
 
->> Docker  --hard requirement for running app
+**NB: Docker is a hard requirement for running app**
 
-<h4>Setup instructions </h4>
+### Setup instructions
 
-After cloning the repo, open the project folder on the terminal: 
+After cloning the repo, open the project folder on the terminal and run the following commands:
 
->
->>$ cd docker
->
->>$ docker-compose build
->
->>$ docker-compose up
-> 
-> After docker-compose up has completed open another terminal window and navigate to the docker directory of your repo. 
-> You will now migrate the db and populate test data. Run the instructions below. 
-> <strong>Please note</strong> You have to have your app still running docker to execute the below instructions. 
-> 
->>$ docker-compose exec php bin/console doctrine:database:create
->
->>$ docker-compose exec php bin/console doctrine:fixtures:load
+```
+cd docker
+docker-compose build
+docker-compose up
+```
+
+After `docker-compose up` has completed open another terminal window and navigate to the docker directory (`cinema/docker`) of the repo.
+You will now migrate the db and populate test data.
+
+Run the instructions below.
+
+**NB: You have to have docker still running in a separate terminal to execute the below instructions.**
+
+```
+docker-compose exec php bin/console doctrine:database:create
+docker-compose exec php bin/console doctrine:fixtures:load
+```
