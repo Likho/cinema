@@ -8,38 +8,41 @@ use App\Repository\BookingRepository;
 use App\Repository\MovieTimeRepository;
 use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface as Session;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
  */
-class BookingsController extends BaseController
+class BookingsController extends AbstractController
 {
     protected $bookingRepository;
     protected $movieTimeRepository;
-    protected $session;
+    protected $requestStack;
+
     public function __construct(
-        ContainerInterface $container,
         BookingRepository $bookingRepository,
         MovieTimeRepository $movieTimeRepository,
-        Session $session
+        RequestStack $requestStack
     ){
-        parent::__construct($container);
         $this->bookingRepository = $bookingRepository;
         $this->movieTimeRepository = $movieTimeRepository;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     public function index(): Response
     {
+        $message = $this->requestStack->getSession()->get('success');
+        $this->requestStack->getSession()->remove('success');
+
         return $this->render('bookings/index.html.twig', [
-            'user' => $this->user,
-            'bookings' => $this->user->getBookings()
+            'user' => $this->getUser(),
+            'bookings' => $this->getUser()->getBookings(),
+            'successMessage' => $message
         ]);
     }
 
@@ -49,14 +52,10 @@ class BookingsController extends BaseController
      */
     public function create(MovieTime $movieTime): Response
     {
-        $error = "";
-        foreach ($this->session->getFlashBag()->get('error', []) as $message) {
-            $error = $message;
-        }
         return $this->render('bookings/create.html.twig', [
             'movieTime' => $movieTime,
-            'error' => $error,
-            'user' => $this->user,
+            'error' => $this->requestStack->getSession()->get('error'),
+            'user' => $this->getUser(),
             'pageTitle' => "Book {$movieTime->getMovieDate()->getMovie()->getTitle()}",
             'availableSeats' => $movieTime->getTheater()->getMaxSeats() - $movieTime->getTicketsBooked()
         ]);
@@ -71,16 +70,20 @@ class BookingsController extends BaseController
      */
     public function add(Request $request, MovieTime $movieTime): RedirectResponse
     {
-        $request->request->set('user', $this->user);
+        $request->request->set('user', $this->getUser());
         try {
             $booking = $this->bookingRepository->save($request, $movieTime);
 
             //Update theater available tickets
             $this->movieTimeRepository->addToBookedTickets($booking);
             //Redirect to bookings page
+            $this->requestStack->getSession()->set(
+                'success',
+                "Booking created with reference {$booking->getReferenceNumber()}"
+            );
             return $this->redirectToRoute('bookings');
         } catch (\Exception $exception) {
-            $this->session->getFlashBag()->add('error', $exception->getMessage());
+            $this->requestStack->getSession()->set('error', $exception->getMessage());
             return $this->redirect("/bookings/create/{$movieTime->getId()}");
         }
 

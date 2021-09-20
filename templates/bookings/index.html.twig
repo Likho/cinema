@@ -10,6 +10,12 @@
             <div v-if="cancelSuccess" class="alert text-center alert-success" v-bind:class="{'alert-danger': cancelError }" >
                 Successfully cancelled booking!!
             </div>
+            {% if successMessage %}
+                <div class="alert text-center alert-success" >
+                    {{ successMessage }}
+                </div>
+            {% endif %}
+            <h2 class="pb-4">Manage bookings</h2>
             <table class="table">
                 <thead class="table-light">
                     <th>id</th>
@@ -40,7 +46,7 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="6" class="text-center">No bookings yet </td>
+                        <td colspan="8" class="text-center">No bookings yet </td>
                     </tr>
                 {% endif %}
                 </tbody>

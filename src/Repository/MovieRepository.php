@@ -24,6 +24,7 @@ class MovieRepository extends ServiceEntityRepository
 
     public function findUpcoming()
     {
+        //Only display movies with dates in the future
         return $this->createQueryBuilder('m')
             ->innerJoin(
                 MovieDate::class,

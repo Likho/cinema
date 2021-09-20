@@ -21,7 +21,6 @@ class MovieDateFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i <= 3; $i++) {
-
             foreach ($this->movieRepository->findAll() as $movie) {
                 $date = Carbon::now();
                 $movieDate = new MovieDate();

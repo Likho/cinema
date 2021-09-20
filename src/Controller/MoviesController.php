@@ -3,20 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
-use App\Entity\MovieDate;
 use App\Repository\MovieRepository;
-use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MoviesController extends BaseController
+class MoviesController extends AbstractController
 {
     protected $movieRepository;
-    function __construct(MovieRepository $movieRepository, ContainerInterface $container)
+    protected $user;
+    function __construct(MovieRepository $movieRepository)
     {
-        parent::__construct($container);
         $this->movieRepository = $movieRepository;
     }
 
@@ -26,19 +23,18 @@ class MoviesController extends BaseController
     public function index(): Response
     {
         return $this->render('movies/index.html.twig', [
-            'pageTitle' => 'Book a movie!',
+            'pageTitle' => 'Upcoming Movies!',
             'movies' => $this->movieRepository->findUpcoming(),
-            'user' => $this->user,
+            'user' => $this->getUser(),
         ]);
     }
 
     public function view(Movie $movie): Response
     {
-//        $movie = $this->movieRepository->findById($movie->getId());
         return $this->render('movies/view.html.twig', [
             'pageTitle' => $movie->getTitle(),
             'movie' => $movie,
-            'user' => $this->user,
+            'user' => $this->getUser(),
         ]);
     }
 }

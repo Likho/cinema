@@ -5,20 +5,19 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-class RegistrationController extends BaseController
+class RegistrationController extends AbstractController
 {
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository, ContainerInterface $container)
+    public function __construct(UserRepository $userRepository)
     {
-        parent::__construct($container);
         $this->userRepository = $userRepository;
     }
 
@@ -27,7 +26,7 @@ class RegistrationController extends BaseController
      */
     public function index(Request $request): Response
     {
-        if ($this->user != null) {
+        if ($this->getUser() != null) {
             return  $this->redirect('/');
         }
         $user = new User();
@@ -49,7 +48,7 @@ class RegistrationController extends BaseController
         }
         return $this->render('registration/index.html.twig', [
             'form' => $form->createView(),
-            'user' => $this->user,
+            'user' => $this->getUser(),
             'validationErrors' => $validationErrors,
             'registrationError' => $registrationError,
         ]);
