@@ -32,3 +32,4 @@ docker-compose exec php bin/console doctrine:database:create
 docker-compose exec php bin/console doctrine:migrations:migrate
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
+Once the data is loaded navigate to http://localhost:8080/ to get started
