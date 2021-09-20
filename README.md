@@ -29,5 +29,6 @@ Run the instructions below.
 
 ```
 docker-compose exec php bin/console doctrine:database:create
+docker-compose exec php bin/console doctrine:migrations:migrate
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
