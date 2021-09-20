@@ -23,9 +23,7 @@ docker-compose run php composer install
 
 After `composer install` has completed you will now migrate the db and populate test data.
 
-Run the instructions below.
-
-**NB: You have to have docker still running in a separate terminal to execute the below instructions.**
+Run the instructions below. (Reply yes to all the migration prompts)
 
 ```
 docker-compose exec php bin/console doctrine:database:create
