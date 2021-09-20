@@ -10,10 +10,5 @@ RUN apt update \
 
 RUN curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
 
-# Set timezone
-RUN rm /etc/localtime
-RUN ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-RUN "date"
-
 WORKDIR /var/www/symfony
 
