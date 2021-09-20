@@ -1,5 +1,5 @@
 # Cinema App
-A Symfony movie booking application. I have used the framework Symfony 5 and mariaDb.
+A Symfony movie booking application. I have used the framework Symfony 5, mariaDb, Bootstrap for styling and some VueJs.
 My reasons for using Symfony are
 - It supports the repository pattern by default and creates repositories with basic methods
   for each entity.
